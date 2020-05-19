@@ -1,0 +1,14 @@
+exec { 'Remove_Cert':
+
+        command => '$(Get-ChildItem -Path Cert:\LocalMachine\CA\e1964c6d6f7666b133a5837e8d87f05f9b91359d | Remove-Item)',
+
+        provider => powershell,
+
+        logoutput => true,
+
+}
+
+based on age
+
+Get-ChildItem -Path Cert:\LocalMachine\Root | Where-Object {$_.NotAfter -lt (Get-Date).AddDays(40)}
+| ForEach-Object {Remove-Item -Path "Cert:\LocalMachine\Root\$($_.Thumbprint)" -Recurse -Verbose}
